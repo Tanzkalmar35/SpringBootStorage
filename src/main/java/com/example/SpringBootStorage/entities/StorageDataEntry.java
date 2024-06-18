@@ -19,12 +19,16 @@ public class StorageDataEntry {
     @Column(nullable = false, name = "name")
     private String name;
 
+    @Column(nullable = false, name = "type")
+    private DataType type;
+
     public StorageDataEntry() {}
 
-    public StorageDataEntry(final UUID uuid, final String data, final String name) {
+    public StorageDataEntry(final UUID uuid, final String data, final String name, final DataType type) {
         this.uuid = uuid;
         this.data = data;
         this.name = name;
+        this.type = type;
     }
 
     public UUID getUuid() {
@@ -49,5 +53,19 @@ public class StorageDataEntry {
 
     public void setName(final String name) {
         this.name = name;
+    }
+
+    public DataType getType() {
+        return type;
+    }
+
+    public void setType(final DataType type) {
+        this.type = type;
+    }
+
+    public enum DataType {
+        PASSWORD,
+        TELEPHONE_NUMBER,
+        OTHER
     }
 }

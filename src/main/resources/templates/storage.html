@@ -2,15 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Storage</title>
+    <script th:src="@{/js/csrf.js}"></script>
     <meta th:name="_csrf" th:content="${_csrf.token}"/>
     <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
-
-    <title>Home</title>
-    <script th:src="@{/js/csrf.js}"></script>
 </head>
 <body>
-    This is the home page.
-    <a href="/create-user">Create new user</a>
-    <a href="/logout">Log out</a>
+    This is the storage
 </body>
 </html>
