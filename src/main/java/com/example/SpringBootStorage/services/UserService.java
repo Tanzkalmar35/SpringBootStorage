@@ -3,14 +3,15 @@ package com.example.SpringBootStorage.services;
 import com.example.SpringBootStorage.entities.User;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public interface UserService {
 
-    Optional<User> findByUsername(String username);
+    Optional<User> findByUsername(final String username);
 
-    User saveUser(User user);
+    User saveUser(final User user);
 
-    User updateUser(User user);
+    User updateUser(final User user);
 
-    void deleteUser(Long id);
+    void deleteUser(final String username);
 }

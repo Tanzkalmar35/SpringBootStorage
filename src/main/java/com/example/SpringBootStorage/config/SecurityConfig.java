@@ -7,11 +7,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -19,20 +20,26 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final UserServiceImpl userService;
+    private final UserServiceImpl userServiceImpl;
 
-    public SecurityConfig(UserServiceImpl userService) {
-        this.userService = userService;
+    public SecurityConfig(final UserServiceImpl userServiceImpl) {
+        this.userServiceImpl = userServiceImpl;
     }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authenticationManager(authenticationManager(userService))
+                .csrf(AbstractHttpConfigurer::disable)
+                .authenticationManager(authenticationManager(userServiceImpl))
                 .authorizeHttpRequests(auth -> {
                     auth.anyRequest().authenticated();
                 })
-                .formLogin(Customizer.withDefaults());
+                .formLogin(Customizer.withDefaults())
+                .logout(httpSecurityLogoutConfigurer -> {
+                    httpSecurityLogoutConfigurer.logoutUrl("/logout");
+                    httpSecurityLogoutConfigurer.logoutSuccessUrl("/login");
+                    httpSecurityLogoutConfigurer.invalidateHttpSession(true);
+                });
         return http.build();
     }
 
@@ -45,8 +52,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public org.springframework.security.crypto.password.PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }
