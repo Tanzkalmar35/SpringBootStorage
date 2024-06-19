@@ -1,6 +1,6 @@
 package com.example.SpringBootStorage.config;
 
-import com.example.SpringBootStorage.services.impl.UserServiceImpl;
+import com.example.SpringBootStorage.services.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,27 +10,25 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final UserServiceImpl userServiceImpl;
+    private final UserService userService;
 
-    public SecurityConfig(final UserServiceImpl userServiceImpl) {
-        this.userServiceImpl = userServiceImpl;
+    public SecurityConfig(final UserService userService) {
+        this.userService = userService;
     }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authenticationManager(authenticationManager(userServiceImpl))
+                .authenticationManager(authenticationManager(userService))
                 .authorizeHttpRequests(auth -> {
                     auth.anyRequest().authenticated();
                 })
@@ -44,7 +42,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(final UserServiceImpl userService) {
+    public AuthenticationManager authenticationManager(final UserService userService) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userService);
         provider.setPasswordEncoder(passwordEncoder());

@@ -1,20 +1,21 @@
 package com.example.SpringBootStorage.controller;
 
 import com.example.SpringBootStorage.entities.User;
+import com.example.SpringBootStorage.repositories.UserRepository;
 import com.example.SpringBootStorage.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/api/user")
+public class UserApiController {
 
-    private final UserService userService;
-
-    public UserController(final UserService userService) {
-        this.userService = userService;
-    }
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/{username}")
     public Optional<User> findUser(@PathVariable("username") final String username) {

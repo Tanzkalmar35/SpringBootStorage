@@ -1,17 +1,36 @@
 package com.example.SpringBootStorage.services;
 
 import com.example.SpringBootStorage.entities.StorageDataEntry;
+import com.example.SpringBootStorage.exceptions.StorageDataNotFoundException;
+import com.example.SpringBootStorage.repositories.StorageDataRepository;
 
 import java.util.Optional;
 
-public interface StorageDataService {
+public class StorageDataService {
 
-    Optional<StorageDataEntry> findByName(final String name);
+    private StorageDataRepository storageDataRepository;
 
-    StorageDataEntry saveStorageDataEntry(final StorageDataEntry storageDataEntry);
+    public StorageDataService(StorageDataRepository storageDataRepository) {
+        this.storageDataRepository = storageDataRepository;
+    }
 
-    StorageDataEntry updateStorageDataEntry(final StorageDataEntry storageDataEntry);
+    public Optional<StorageDataEntry> findByName(String name) {
+        return storageDataRepository.findByName(name);
+    }
 
-    void deleteStorageDataEntry(final String name);
+    public StorageDataEntry saveStorageDataEntry(StorageDataEntry storageDataEntry) {
+        return storageDataRepository.save(storageDataEntry);
+    }
+
+    public StorageDataEntry updateStorageDataEntry(StorageDataEntry storageDataEntry) {
+        return storageDataRepository.save(storageDataEntry);
+    }
+
+    public void deleteStorageDataEntry(String name) {
+        StorageDataEntry entity = storageDataRepository.findByName(name).orElseThrow(
+                () -> new StorageDataNotFoundException(String.format("StorageDataEntry with name %s not found.", name))
+        );
+        storageDataRepository.delete(entity);
+    }
 
 }
