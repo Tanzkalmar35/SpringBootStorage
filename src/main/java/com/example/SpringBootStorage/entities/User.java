@@ -2,6 +2,7 @@ package com.example.SpringBootStorage.entities;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -19,10 +20,19 @@ public class User {
     @Column(nullable = false, name = "password")
     private String password;
 
-    public User(final UUID uuid, final String username, final String password) {
+    @ManyToMany
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
+
+    public User(final UUID uuid, final String username, final String password, final Set<Role> roles) {
         this.uuid = uuid;
         this.username = username;
         this.password = password;
+        this.roles = roles;
     }
 
     public User() {}
@@ -49,5 +59,13 @@ public class User {
 
     public void setPassword(final String password) {
         this.password = password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }
