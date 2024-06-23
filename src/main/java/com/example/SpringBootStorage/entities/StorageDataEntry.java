@@ -22,6 +22,8 @@ public class StorageDataEntry {
     @Column(nullable = false, name = "type")
     private DataType type;
 
+    // TODO: Add user field
+
     public StorageDataEntry() {}
 
     public StorageDataEntry(final UUID uuid, final String data, final String name, final DataType type) {

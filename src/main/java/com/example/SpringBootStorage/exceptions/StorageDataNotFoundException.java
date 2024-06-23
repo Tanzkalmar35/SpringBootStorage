@@ -8,10 +8,11 @@ public class StorageDataNotFoundException extends RuntimeException {
     /**
      * Initializes a new StorageDataNotFoundException with the given message.
      *
-     * @param message the error message.
+     * @param message   the error message.
+     * @param qualifier the qualifier used to identify the StorageDataEntry.
      */
-    public StorageDataNotFoundException(final String message) {
-        super(message);
+    public StorageDataNotFoundException(final String message, final String qualifier) {
+        super(String.format(message, qualifier));
     }
 
     /**

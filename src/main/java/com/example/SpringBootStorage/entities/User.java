@@ -1,5 +1,6 @@
 package com.example.SpringBootStorage.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -20,7 +21,8 @@ public class User {
     @Column(nullable = false, name = "password")
     private String password;
 
-    @ManyToMany
+    @JsonIgnore
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),

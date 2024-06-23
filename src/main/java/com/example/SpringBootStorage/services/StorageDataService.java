@@ -4,6 +4,7 @@ import com.example.SpringBootStorage.entities.StorageDataEntry;
 import com.example.SpringBootStorage.exceptions.StorageDataNotFoundException;
 import com.example.SpringBootStorage.repositories.StorageDataRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public class StorageDataService {
@@ -18,6 +19,10 @@ public class StorageDataService {
         return storageDataRepository.findByName(name);
     }
 
+    public List<StorageDataEntry> findAllOfUser() {
+        return storageDataRepository.findAll();
+    }
+
     public StorageDataEntry saveStorageDataEntry(StorageDataEntry storageDataEntry) {
         return storageDataRepository.save(storageDataEntry);
     }
@@ -28,7 +33,7 @@ public class StorageDataService {
 
     public void deleteStorageDataEntry(String name) {
         StorageDataEntry entity = storageDataRepository.findByName(name).orElseThrow(
-                () -> new StorageDataNotFoundException(String.format("StorageDataEntry with name %s not found.", name))
+                () -> new StorageDataNotFoundException("StorageDataEntry with name %s not found.", name)
         );
         storageDataRepository.delete(entity);
     }

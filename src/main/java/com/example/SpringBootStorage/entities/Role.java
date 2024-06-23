@@ -1,5 +1,6 @@
 package com.example.SpringBootStorage.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -17,12 +18,8 @@ public class Role {
     @Column(nullable = false, unique = true, name = "name")
     private String name;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
+    @JsonIgnore
+    @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
     public Role(final UUID uuid, final String name, final Set<User> users) {

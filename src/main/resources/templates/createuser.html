@@ -18,19 +18,40 @@
         <label for="inputPassword">Password</label>
         <input id="inputPassword" name="password" />
 
+        <select name="roles" id="roles">
+            <option>Choose a role</option>
+        </select>
+
         <button id="submitUserCreationBtn" type="submit">Create User</button>
     </form>
 <script>
     $(document).ready(function() {
+        $.ajax({
+            type: "GET",
+            url: "/api/role/all",
+            dataType: "text",
+            success: function (response) {
+                var roles = JSON.parse(response);
+                roles.forEach(role => {
+                    console.log("Raw Role: ", role)
+                    $('#roles').append(`<option>${role.name}</option>`) // Use .append() instead of .innerHTML
+                })
+            },
+            error: function (error) {
+                console.error("An error occured fetching the roles: ", error)
+            }
+        })
         $('#createUserForm').on('submit', function(e) {
             e.preventDefault();
+            var selectedRoles = $('#roles').val();
             $.ajax({
                 type: "POST",
                 url: "/api/user",
                 contentType: "application/json",
                 data: JSON.stringify({
                     "username": $('#inputUsername').val(),
-                    "password": $('#inputPassword').val()
+                    "password": $('#inputPassword').val(),
+                    "roles": selectedRoles
                 }),
                 success: function (response) {
                     console.log("New User created successfully: ", response)
