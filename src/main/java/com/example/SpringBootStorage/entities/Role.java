@@ -24,10 +24,20 @@ public class Role {
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
-    public Role(final UUID uuid, final RoleName name, final Set<User> users) {
+    @ManyToMany
+    @JoinTable(
+            name = "role_storage_data",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "data_id")
+    )
+    private Set<StorageDataEntry> storageDataEntries;
+
+
+    public Role(final UUID uuid, final RoleName name, final Set<User> users, final Set<StorageDataEntry> storageDataEntries) {
         this.uuid = uuid;
         this.name = name;
         this.users = users;
+        this.storageDataEntries = storageDataEntries;
     }
 
     public Role() {}
@@ -54,6 +64,14 @@ public class Role {
 
     public void setUsers(final Set<User> users) {
         this.users = users;
+    }
+
+    public Set<StorageDataEntry> getStorageDataEntries() {
+        return storageDataEntries;
+    }
+
+    public void setStorageDataEntries(final Set<StorageDataEntry> storageDataEntries) {
+        this.storageDataEntries = storageDataEntries;
     }
 
     public enum RoleName {

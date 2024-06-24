@@ -28,7 +28,12 @@ public class User {
     )
     private Set<Role> roles;
 
-    public User(final UUID uuid, final String username, final String password, final Set<Role> roles) {
+    public User(
+            final UUID uuid,
+            final String username,
+            final String password,
+            final Set<Role> roles) {
+
         this.uuid = uuid;
         this.username = username;
         this.password = password;

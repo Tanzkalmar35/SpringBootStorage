@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Storage</title>
+    <script th:src="@{/js/csrf.js}"></script>
+    <meta th:name="_csrf" th:content="${_csrf.token}"/>
+    <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+<body>
+    <form id="createUserForm">
+        <h1>Create a new storage entry</h1>
+
+        <label for="inputName">Name</label>
+        <input id="inputName" name="name" />
+
+        <label for="inputPassword">Password</label>
+        <input id="inputPassword" name="password" />
+
+        <select name="roles" id="roles">
+            <option>Choose a role</option>
+        </select>
+
+        <button id="submitUserCreationBtn" type="submit">Create User</button>
+    </form>
+</body>
+</html>

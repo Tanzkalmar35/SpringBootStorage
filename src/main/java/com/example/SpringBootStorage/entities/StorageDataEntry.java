@@ -1,8 +1,8 @@
 package com.example.SpringBootStorage.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,17 +18,25 @@ public class StorageDataEntry {
     @Column(nullable = false, name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "storage_data_entry_uuid")
+    @OneToMany(mappedBy = "storageDataEntry")
     private Set<Property> properties;
 
-    // TODO: Add user field
+    @JsonIgnore
+    @ManyToMany(mappedBy = "storageDataEntries")
+    private Set<Role> rolesWithPermission;
 
     public StorageDataEntry() {}
 
-    public StorageDataEntry(final UUID uuid, final String name, final Set<Property> properties) {
+    public StorageDataEntry(
+            final UUID uuid,
+            final String name,
+            final Set<Property> properties,
+            final Set<Role> rolesWithPermission) {
+
         this.uuid = uuid;
         this.name = name;
         this.properties = properties;
+        this.rolesWithPermission = rolesWithPermission;
     }
 
     public UUID getUuid() {
@@ -53,5 +61,21 @@ public class StorageDataEntry {
 
     public void setProperties(final Set<Property> properties) {
         this.properties = properties;
+    }
+
+    public Set<Role> getRolesWithPermission() {
+        return rolesWithPermission;
+    }
+
+    public void setRolesWithPermission(final Set<Role> rolesWithPermission) {
+        this.rolesWithPermission = rolesWithPermission;
+    }
+
+    public void addRoleWithPermission(final Role role) {
+        this.rolesWithPermission.add(role);
+    }
+
+    public void removeRoleWithPermission(final Role role) {
+        this.rolesWithPermission.remove(role);
     }
 }
