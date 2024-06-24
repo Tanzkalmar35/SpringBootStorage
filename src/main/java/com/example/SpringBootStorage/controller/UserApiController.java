@@ -1,8 +1,7 @@
 package com.example.SpringBootStorage.controller;
 
 import com.example.SpringBootStorage.entities.User;
-import com.example.SpringBootStorage.json.JsonUser;
-import com.example.SpringBootStorage.repositories.RoleRepository;
+import com.example.SpringBootStorage.dto.UserDto;
 import com.example.SpringBootStorage.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +21,12 @@ public class UserApiController {
     }
 
     @PostMapping(consumes = {"application/json"})
-    public User saveUser(@RequestBody final JsonUser user) {
+    public User saveUser(@RequestBody final UserDto user) {
         return userService.saveUser(user);
     }
 
     @PutMapping
-    public User updateUser(@RequestBody final JsonUser user) {
+    public User updateUser(@RequestBody final UserDto user) {
         return userService.updateUser(user);
     }
 

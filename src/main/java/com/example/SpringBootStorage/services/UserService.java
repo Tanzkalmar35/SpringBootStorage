@@ -3,11 +3,10 @@ package com.example.SpringBootStorage.services;
 import com.example.SpringBootStorage.entities.Role;
 import com.example.SpringBootStorage.entities.User;
 import com.example.SpringBootStorage.exceptions.RoleByIdNotFoundException;
-import com.example.SpringBootStorage.json.JsonUser;
+import com.example.SpringBootStorage.dto.UserDto;
 import com.example.SpringBootStorage.repositories.RoleRepository;
 import com.example.SpringBootStorage.repositories.UserRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import com.example.SpringBootStorage.mapper.UserMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -19,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,20 +38,20 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public User saveUser(JsonUser jsonUser) {
+    public User saveUser(final UserDto userDto) {
         final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        User user = jsonUser.getUser();
+        User user = UserMapper.map(userDto);
 
-        user.setPassword(passwordEncoder.encode(jsonUser.getPassword()));
-        final Set<Role.RoleName> userRolesNames = jsonUser.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        final Set<Role.RoleName> userRolesNames = userDto.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
         final Set<Role> userRoles = roleRepository.findRolesByName(userRolesNames);
         user.setRoles(userRoles);
 
         return userRepository.save(user);
     }
 
-    public User updateUser(final JsonUser jsonUser) {
-        return userRepository.save(jsonUser.getUser());
+    public User updateUser(final UserDto userDto) {
+        return userRepository.save(UserMapper.map(userDto));
     }
 
     public void deleteUser(final String username) {

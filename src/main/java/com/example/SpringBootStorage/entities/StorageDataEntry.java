@@ -2,6 +2,8 @@ package com.example.SpringBootStorage.entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -13,24 +15,20 @@ public class StorageDataEntry {
     @Column(name = "id")
     private UUID uuid;
 
-    @Column(nullable = false, name = "data")
-    private String data;
-
     @Column(nullable = false, name = "name")
     private String name;
 
-    @Column(nullable = false, name = "type")
-    private DataType type;
+    @OneToMany(mappedBy = "storage_data_entry_uuid")
+    private Set<Property> properties;
 
     // TODO: Add user field
 
     public StorageDataEntry() {}
 
-    public StorageDataEntry(final UUID uuid, final String data, final String name, final DataType type) {
+    public StorageDataEntry(final UUID uuid, final String name, final Set<Property> properties) {
         this.uuid = uuid;
-        this.data = data;
         this.name = name;
-        this.type = type;
+        this.properties = properties;
     }
 
     public UUID getUuid() {
@@ -41,14 +39,6 @@ public class StorageDataEntry {
         this.uuid = uuid;
     }
 
-    public String getData() {
-        return data;
-    }
-
-    public void setData(final String data) {
-        this.data = data;
-    }
-
     public String getName() {
         return name;
     }
@@ -57,17 +47,11 @@ public class StorageDataEntry {
         this.name = name;
     }
 
-    public DataType getType() {
-        return type;
+    public Set<Property> getProperties() {
+        return properties;
     }
 
-    public void setType(final DataType type) {
-        this.type = type;
-    }
-
-    public enum DataType {
-        PASSWORD,
-        TELEPHONE_NUMBER,
-        OTHER
+    public void setProperties(final Set<Property> properties) {
+        this.properties = properties;
     }
 }

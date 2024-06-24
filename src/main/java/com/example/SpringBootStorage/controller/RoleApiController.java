@@ -19,6 +19,7 @@ public class RoleApiController {
     private RoleRepository roleRepository;
 
     @GetMapping("/all")
+    // TODO: Refactor to RoleDto
     public List<Role> findAllRoles() {
         return roleRepository.findAll();
     }

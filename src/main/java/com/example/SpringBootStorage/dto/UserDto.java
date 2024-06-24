@@ -1,12 +1,11 @@
-package com.example.SpringBootStorage.json;
+package com.example.SpringBootStorage.dto;
 
 import com.example.SpringBootStorage.entities.Role;
-import com.example.SpringBootStorage.entities.User;
 
 import java.util.Set;
 import java.util.UUID;
 
-public class JsonUser {
+public class UserDto {
 
     private UUID uuid;
 
@@ -15,13 +14,6 @@ public class JsonUser {
     private String password;
 
     private Set<Role> roles;
-
-    public JsonUser(final UUID uuid, final String username, final String password, final Set<Role> roles) {
-        this.uuid = uuid;
-        this.username = username;
-        this.password = password;
-        this.roles = roles;
-    }
 
     public UUID getUuid() {
         return uuid;
@@ -53,9 +45,5 @@ public class JsonUser {
 
     public void setRoles(final Set<Role> roles) {
         this.roles = roles;
-    }
-
-    public User getUser() {
-        return new User(this.uuid, this.username, this.password, this.roles);
     }
 }

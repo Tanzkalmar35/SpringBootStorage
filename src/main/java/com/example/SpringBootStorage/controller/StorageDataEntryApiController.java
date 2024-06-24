@@ -5,11 +5,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/storage")
-public class StorageDataEntryController {
+@RequestMapping("/api/storage")
+public class StorageDataEntryApiController {
 
-    @GetMapping
-    public String getStorageDataEntry() {
-        return "storage";
-    }
+
+
 }
