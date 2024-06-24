@@ -1,41 +1,27 @@
-package com.example.SpringBootStorage.entities;
+package com.example.SpringBootStorage.json;
 
-import jakarta.persistence.*;
+import com.example.SpringBootStorage.entities.Role;
+import com.example.SpringBootStorage.entities.User;
 
 import java.util.Set;
 import java.util.UUID;
 
-@Entity
-@Table(name = "users")
-public class User {
+public class JsonUser {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
     private UUID uuid;
 
-    @Column(nullable = false, unique = true, name = "username")
     private String username;
 
-    @Column(nullable = false, name = "password")
     private String password;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
     private Set<Role> roles;
 
-    public User(final UUID uuid, final String username, final String password, final Set<Role> roles) {
+    public JsonUser(final UUID uuid, final String username, final String password, final Set<Role> roles) {
         this.uuid = uuid;
         this.username = username;
         this.password = password;
         this.roles = roles;
     }
-
-    public User() {}
 
     public UUID getUuid() {
         return uuid;
@@ -65,7 +51,11 @@ public class User {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(final Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public User getUser() {
+        return new User(this.uuid, this.username, this.password, this.roles);
     }
 }

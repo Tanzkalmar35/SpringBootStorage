@@ -51,7 +51,9 @@
                 data: JSON.stringify({
                     "username": $('#inputUsername').val(),
                     "password": $('#inputPassword').val(),
-                    "roles": selectedRoles
+                    "roles": [
+                        {"name": selectedRoles}
+                    ]
                 }),
                 success: function (response) {
                     console.log("New User created successfully: ", response)

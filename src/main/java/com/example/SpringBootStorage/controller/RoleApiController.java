@@ -20,11 +20,7 @@ public class RoleApiController {
 
     @GetMapping("/all")
     public List<Role> findAllRoles() {
-        List<Role> all = roleRepository.findAll();
-        for (Role role : all) {
-            System.out.println("Role:" + role.getName());
-        }
-        return all;
+        return roleRepository.findAll();
     }
 
 }
