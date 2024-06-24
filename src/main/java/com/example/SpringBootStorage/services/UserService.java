@@ -9,7 +9,6 @@ import com.example.SpringBootStorage.repositories.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,9 +30,6 @@ public class UserService implements UserDetailsService {
     @Autowired
     @Lazy
     private RoleRepository roleRepository;
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     public UserService(final UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -46,16 +43,11 @@ public class UserService implements UserDetailsService {
     public User saveUser(JsonUser jsonUser) {
         final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         User user = jsonUser.getUser();
-        Set<Role> roles = new HashSet<>();
 
         user.setPassword(passwordEncoder.encode(jsonUser.getPassword()));
-        for (Role jsonRole : jsonUser.getRoles()) {
-            Role role = entityManager.createQuery("SELECT r FROM Role r WHERE r.name = :roleName", Role.class)
-                    .setParameter("roleName", jsonRole.getName())
-                    .getSingleResult();
-            roles.add(role);
-        }
-        user.setRoles(roles);
+        final Set<Role.RoleName> userRolesNames = jsonUser.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
+        final Set<Role> userRoles = roleRepository.findRolesByName(userRolesNames);
+        user.setRoles(userRoles);
 
         return userRepository.save(user);
     }
