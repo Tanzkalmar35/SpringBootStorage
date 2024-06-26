@@ -18,11 +18,15 @@ public class StorageDataEntry {
     @Column(nullable = false, name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "storageDataEntry")
+    @OneToMany(mappedBy = "storageDataEntry", cascade = CascadeType.ALL)
     private Set<Property> properties;
 
-    @JsonIgnore
-    @ManyToMany(mappedBy = "storageDataEntries")
+    @ManyToMany
+    @JoinTable(
+            name = "role_storage_data",
+            joinColumns = @JoinColumn(name = "storage_data_entry_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
     private Set<Role> rolesWithPermission;
 
     public StorageDataEntry() {}

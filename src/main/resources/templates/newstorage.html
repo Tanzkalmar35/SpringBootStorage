@@ -3,25 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <title>Storage</title>
-    <script th:src="@{/js/csrf.js}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <meta th:name="_csrf" th:content="${_csrf.token}"/>
     <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <script th:src="@{/js/csrf.js}"></script>
 </head>
 <body>
-    <form id="createUserForm">
-        <h1>Create a new storage entry</h1>
+<form id="createStorageForm">
+    <h1>Create a new storage entry</h1>
 
-        <label for="inputName">Name</label>
-        <input id="inputName" name="name" />
+    <label for="inputName">Name</label>
+    <input id="inputName" name="name"/>
 
-        <label for="inputPassword">Password</label>
-        <input id="inputPassword" name="password" />
+    <div>
+        <label for="inputPropName">Name</label>
+        <input id="inputPropName" name="inputPropName"/>
 
-        <select name="roles" id="roles">
-            <option>Choose a role</option>
+        <label for="inputPropVal">Val</label>
+        <input id="inputPropVal" name="inputPropVal"/>
+
+        <select name="propType" id="propType">
+            <option>PASSWORD</option>
         </select>
+    </div>
 
-        <button id="submitUserCreationBtn" type="submit">Create User</button>
-    </form>
+    <select name="storageRoles" id="storageRoles">
+        <option>Choose a role</option>
+    </select>
+
+    <button id="submitStorageCreationBtn" type="submit">Create Storage</button>
+</form>
 </body>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "/api/role/all",
+            dataType: "text",
+            success: function (response) {
+                var roles = JSON.parse(response);
+                roles.forEach(role => {
+                    $('#storageRoles').append(`<option>${role.name}</option>`) // Use .append() instead of .innerHTML
+                })
+            },
+            error: function (error) {
+                console.error("An error occured fetching the roles: ", error)
+            }
+        });
+        $("#createStorageForm").submit(function (event) {
+            event.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "/api/storage",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    "name": $("#inputName").val(),
+                    "properties": [
+                        {
+                            "key": $("#inputPropName").val(),
+                            "value": $("#inputPropVal").val(),
+                            "type": $("#propType").val()
+                        }
+                    ],
+                    "rolesWithPermission": [
+                        {"name": $("#storageRoles").val()}
+                    ]
+                }),
+                success: function (response) {
+                    console.log("Storage created successfully: ", response)
+                },
+                error: function (error) {
+                    console.error("An error occured creating the storage: ", error)
+                }
+            });
+        });
+    });
+</script>
 </html>

@@ -24,12 +24,8 @@ public class Role {
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
-    @ManyToMany
-    @JoinTable(
-            name = "role_storage_data",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "data_id")
-    )
+    @JsonIgnore
+    @ManyToMany(mappedBy = "rolesWithPermission")
     private Set<StorageDataEntry> storageDataEntries;
 
 

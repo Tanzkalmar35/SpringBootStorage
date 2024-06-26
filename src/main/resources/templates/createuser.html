@@ -33,7 +33,6 @@
             success: function (response) {
                 var roles = JSON.parse(response);
                 roles.forEach(role => {
-                    console.log("Raw Role: ", role)
                     $('#roles').append(`<option>${role.name}</option>`) // Use .append() instead of .innerHTML
                 })
             },
@@ -43,7 +42,6 @@
         })
         $('#createUserForm').on('submit', function(e) {
             e.preventDefault();
-            var selectedRoles = $('#roles').val();
             $.ajax({
                 type: "POST",
                 url: "/api/user",
@@ -52,12 +50,9 @@
                     "username": $('#inputUsername').val(),
                     "password": $('#inputPassword').val(),
                     "roles": [
-                        {"name": selectedRoles}
+                        {"name": $('#roles').val()}
                     ]
                 }),
-                success: function (response) {
-                    console.log("New User created successfully: ", response)
-                },
                 error: function (error) {
                     console.error("An error occured storing the user: ", error)
                 }
