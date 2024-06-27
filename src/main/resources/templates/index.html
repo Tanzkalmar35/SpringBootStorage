@@ -2,16 +2,50 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <meta th:name="_csrf" th:content="${_csrf.token}"/>
     <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <script th:src="@{/js/csrf.js}"></script>
 
     <title>Home</title>
-    <script th:src="@{/js/csrf.js}"></script>
 </head>
 <body>
-    This is the home page.
-    <a href="/user/new">Create new user</a>
-    <a href="/logout">Log out</a>
-    <a href="/storage/new">To the data</a>
+This is the home page.
+<a href="/user/new">Create new user</a>
+<a href="/logout">Log out</a>
+<a href="/storage/new">To the data</a>
+<div id="data-list">
+
+</div>
+<script>
+    // $.ajax({
+    //     type: "GET",
+    //     url: "/api/role/all",
+    //     dataType: "text",
+    //     success: function (response) {
+    //         var roles = JSON.parse(response);
+    //         roles.forEach(role => {
+    //             $('#roles').append(`<option>${role.name}</option>`) // Use .append() instead of .innerHTML
+    //         })
+    //     },
+    //     error: function (error) {
+    //         console.error("An error occured fetching the roles: ", error)
+    //     }
+    // })
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "/api/storage/ADMIN",
+            dataType: "text",
+            success: function (response) {
+                $("#data-list").append(`<div>${response}</div>`)
+                console.log("User stored successfully: ", response)
+            },
+            error: function (error) {
+                console.error("An error occured storing the user: ", error)
+            }
+        })
+    })
+</script>
 </body>
 </html>

@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,8 +33,12 @@ public class StorageDataService {
         return storageDataRepository.findByName(name);
     }
 
-    public List<StorageDataEntry> findAllOfUser() {
-        return storageDataRepository.findAll();
+    @Transactional
+    public Set<StorageDataEntryDto> findAllOfRole(final Role.RoleName roleName) {
+        final Set<StorageDataEntry> dataOfRole = storageDataRepository.findAllOfRole(roleName);
+        final Set<StorageDataEntryDto> dataOfRoleDto =
+                dataOfRole.stream().map(StorageDataEntryMapper::map).collect(Collectors.toSet());
+        return dataOfRoleDto;
     }
 
     @Transactional

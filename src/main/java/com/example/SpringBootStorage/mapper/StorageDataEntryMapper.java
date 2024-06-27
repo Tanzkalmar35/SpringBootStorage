@@ -15,4 +15,13 @@ public class StorageDataEntryMapper {
         return storageDataEntry;
     }
 
+    public static StorageDataEntryDto map(final StorageDataEntry storageDataEntry) {
+        StorageDataEntryDto storageDataEntryDto = new StorageDataEntryDto();
+
+        storageDataEntryDto.setName(storageDataEntry.getName());
+        storageDataEntryDto.setRolesWithPermission(storageDataEntry.getRolesWithPermission());
+        storageDataEntryDto.setProperties(storageDataEntry.getProperties());
+
+        return storageDataEntryDto;
+    }
 }

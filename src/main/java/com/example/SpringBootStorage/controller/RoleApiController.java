@@ -23,5 +23,4 @@ public class RoleApiController {
     public List<Role> findAllRoles() {
         return roleRepository.findAll();
     }
-
 }
