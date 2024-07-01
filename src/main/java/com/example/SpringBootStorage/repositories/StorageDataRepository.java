@@ -19,4 +19,6 @@ public interface StorageDataRepository extends JpaRepository<StorageDataEntry, U
     @Query("SELECT data FROM StorageDataEntry data JOIN data.rolesWithPermission role WHERE role.name = :roleName")
     Set<StorageDataEntry> findAllOfRole(@Param("roleName") final Role.RoleName roleName);
 
+    @Query("SELECT data.name FROM StorageDataEntry data JOIN data.rolesWithPermission role WHERE role.name = :roleName")
+    Set<String> findNamesOfRoleData(@Param("roleName") final Role.RoleName roleName);
 }

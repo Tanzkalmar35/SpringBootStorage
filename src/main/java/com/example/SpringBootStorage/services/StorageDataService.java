@@ -8,10 +8,12 @@ import com.example.SpringBootStorage.mapper.StorageDataEntryMapper;
 import com.example.SpringBootStorage.repositories.RoleRepository;
 import com.example.SpringBootStorage.repositories.StorageDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -39,6 +41,10 @@ public class StorageDataService {
         final Set<StorageDataEntryDto> dataOfRoleDto =
                 dataOfRole.stream().map(StorageDataEntryMapper::map).collect(Collectors.toSet());
         return dataOfRoleDto;
+    }
+
+    public Set<String> getNamesOfRoleData(final Role.RoleName roleName) {
+        return storageDataRepository.findNamesOfRoleData(roleName);
     }
 
     @Transactional

@@ -1,5 +1,6 @@
 package com.example.SpringBootStorage.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -23,6 +24,7 @@ public class Property {
     @Enumerated
     private DataType type;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "storage_data_entry_uuid", referencedColumnName = "id")
     private StorageDataEntry storageDataEntry;
@@ -84,6 +86,7 @@ public class Property {
     }
 
     public enum DataType {
-        PASSWORD,
+        password,
+        text
     }
 }

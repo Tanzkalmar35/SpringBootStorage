@@ -3,27 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <title>Create new User</title>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <meta th:name="_csrf" th:content="${_csrf.token}"/>
     <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
     <script th:src="@{/js/csrf.js}"></script>
 </head>
-<body>
-    <form id="createUserForm">
-        <h1>Create a new user</h1>
+<body class="bg-gray-900 h-screen">
+<!-- Navigation bar -->
+<nav class="flex justify-between p-4">
+    <div class="flex items-center">
+        <h1 class="text-2xl text-white">Create New User</h1>
+    </div>
+    <div class="flex items-center">
+        <button class="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded">
+            <a href="/">Back to Dashboard</a>
+        </button>
+    </div>
+</nav>
 
-        <label for="inputUsername">Username</label>
-        <input id="inputUsername" name="username" />
-
-        <label for="inputPassword">Password</label>
-        <input id="inputPassword" name="password" />
-
-        <select name="roles" id="roles">
-            <option>Choose a role</option>
-        </select>
-
-        <button id="submitUserCreationBtn" type="submit">Create User</button>
+<!-- Form -->
+<div class="container mx-auto p-4">
+    <form class="bg-gray-800 p-4 rounded" id="createUserForm">
+        <h2 class="text-white text-2xl mb-4">Create New User</h2>
+        <div class="mb-4">
+            <label class="text-white block mb-2" for="inputUsername">Username</label>
+            <input id="inputUsername" class="bg-gray-700 text-white p-2 pl-10 rounded w-full" type="text" placeholder="Enter username">
+        </div>
+        <div class="mb-4">
+            <label class="text-white block mb-2" for="inputPassword">Password</label>
+            <input class="bg-gray-700 text-white p-2 pl-10 rounded w-full" type="password" id="inputPassword" placeholder="Enter password">
+        </div>
+        <div class="mb-4">
+            <label class="text-white block mb-2" for="roles">Roles</label>
+            <table id="roles" class="table-auto bg-gray-700 text-white w-full">
+                <thead>
+                <tr>
+                    <th class="px-4 py-2 border-2 border-x-2 p-5"></th>
+                    <th class="px-4 py-2 text-left border-2 border-x-2 p-5">Role</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full" type="submit">Create User</button>
     </form>
+</div>
+</body>
 <script>
     $(document).ready(function() {
         $.ajax({
@@ -33,7 +62,9 @@
             success: function (response) {
                 var roles = JSON.parse(response);
                 roles.forEach(role => {
-                    $('#roles').append(`<option>${role.name}</option>`) // Use .append() instead of .innerHTML
+                    $('#roles').append(
+                        `<tr><td class="border-gray-600 border-2 p-5"><input type="checkbox" id="${role.name}" name="role" /></td><td class="px-4 py-2">${role.name}</td></tr>`
+                    )
                 })
             },
             error: function (error) {
@@ -42,6 +73,13 @@
         })
         $('#createUserForm').on('submit', function(e) {
             e.preventDefault();
+            const roles = [];
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][name="role"]');
+            checkboxes.forEach((checkbox) => {
+                if (checkbox.checked) {
+                    roles.push({"name": checkbox.id});
+                }
+            });
             $.ajax({
                 type: "POST",
                 url: "/api/user",
@@ -49,9 +87,7 @@
                 data: JSON.stringify({
                     "username": $('#inputUsername').val(),
                     "password": $('#inputPassword').val(),
-                    "roles": [
-                        {"name": $('#roles').val()}
-                    ]
+                    "roles": roles
                 }),
                 error: function (error) {
                     console.error("An error occured storing the user: ", error)
